@@ -265,76 +265,32 @@ h1 {
     translateY(0);
 }
 
-/* Responsive layout polish */
-html {
-  background: #111111;
-}
-
-body {
-  width: 100%;
-  overflow-x: hidden;
-}
-
-.app-header,
-.add-form,
-.reminder-list {
-  width: 100%;
-  max-width: 600px;
-}
-
-.app-header {
-  margin: 0 auto 24px;
-}
-
-.add-form {
-  margin: 0 auto 32px;
-}
-
-@media (max-width: 640px) {
-  body {
-    padding: 20px 16px 32px;
-  }
-
-  .app-header {
-    margin-bottom: 24px;
-  }
-
-  h1 {
-    font-size: 30px;
-  }
-
-  .add-button {
-    width: 48px;
-    height: 48px;
-    font-size: 28px;
-    flex: 0 0 auto;
-  }
-
-  .add-form {
-    padding: 18px;
-    border-radius: 18px;
-  }
-
-  .reminder-card {
-    padding: 16px;
-    border-radius: 18px;
-  }
-}
-
-
 .add-form {
   display: none;
-  position: relative;
 }
 
 .add-form.open {
   display: block;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.add-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+  text-align: center;
+}
+
+
 .close-form {
-  position: absolute;
-  top: 14px;
-  right: 14px;
+  float: right;
   width: 34px;
   height: 34px;
   border: 1px solid #444444;
@@ -349,126 +305,6 @@ body {
 .close-form:hover {
   background: #ffffff;
   color: #111111;
-}
-
-
-.add-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  line-height: 1;
-  text-align: center;
-}
-
-
-.data-tools {
-  width: 100%;
-  max-width: 600px;
-  margin: 8px auto 0;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.data-tools button {
-  flex: 1 1 0;
-  min-width: 90px;
-  padding: 11px 14px;
-  border: 1px solid #383838;
-  border-radius: 12px;
-  background: #181818;
-  color: #ffffff;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.data-tools button:hover {
-  background: #ffffff;
-  color: #111111;
-}
-
-@media (max-width: 640px) {
-  .data-tools {
-    gap: 8px;
-  }
-
-  .data-tools button {
-    min-width: 0;
-  }
-}
-
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.settings-button {
-  width: 44px;
-  height: 44px;
-  border: 1px solid #383838;
-  border-radius: 50%;
-  background: transparent;
-  color: #ffffff;
-  font-size: 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  cursor: pointer;
-}
-
-.settings-button:hover {
-  background: #ffffff;
-  color: #111111;
-}
-
-.data-tools {
-  display: none;
-  margin-top: 12px;
-}
-
-.data-tools.open {
-  display: flex;
-}
-
-.settings-panel {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto 24px;
-  padding: 18px;
-  background: #181818;
-  border: 1px solid #303030;
-  border-radius: 18px;
-  display: none;
-}
-
-.settings-panel.open {
-  display: block;
-}
-
-.settings-panel h2 {
-  font-size: 18px;
-  margin-bottom: 6px;
-}
-
-.settings-panel p {
-  color: #888888;
-  font-size: 13px;
-  margin-bottom: 14px;
-}
-
-@media (max-width: 640px) {
-  .header-actions {
-    gap: 8px;
-  }
-
-  .settings-button {
-    width: 42px;
-    height: 42px;
-  }
 }
 
 </style>
@@ -486,22 +322,27 @@ body {
       <p class="date">Monday, August 10</p>
     </div>
 
-    <div class="header-actions">
-      <button class="settings-button" id="settings-button" aria-label="Settings">
-        ⚙
-      </button>
+    <button type="button" class="add-button" id="add-button" aria-label="Add reminder">
+      +
+    </button>
 
-      <button type="button" class="add-button" aria-label="Add reminder" onclick="document.getElementById('add-form').classList.toggle('open')">
-        +
-      </button>
-    </div>
+
+
+  <div id="subtask-inputs"></div>
+
+</div>
+
+  <button id="save-reminder">
+    Save Reminder
+  </button>
+
+</div>
+
   </header>
 
+  <div class="add-form" id="add-form">
 
-
-<div class="add-form" id="add-form">
-
-  <button type="button" class="close-form" id="close-form" aria-label="Close">×</button>
+  <button type="button" id="close-form" class="close-form" aria-label="Close">×</button>
 
   <h2>New Reminder</h2>
 
@@ -551,17 +392,6 @@ body {
     </button>
   </div>
 
-  <div id="subtask-inputs"></div>
-
-</div>
-
-  <button id="save-reminder">
-    Save Reminder
-  </button>
-
-</div>
-
-  
 
 
   <main class="reminder-list">
@@ -588,20 +418,30 @@ body {
     </section>
 
 
-  
-<section class="settings-panel" id="settings-panel" aria-label="Settings">
-  <h2>Settings</h2>
-  <p>Manage your reminder data.</p>
+  </main>
 
-  <div class="data-tools" aria-label="Data tools">
-    <button type="button" id="backup-reminders">Backup</button>
-    <button type="button" id="restore-reminders">Restore</button>
-    <button type="button" id="reset-reminders">Reset</button>
-    <input type="file" id="restore-file" accept=".json,application/json" hidden>
-  </div>
-</section>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
 
-</main>
+  const addButton = document.getElementById("add-button");
+  const addForm = document.getElementById("add-form");
+  const closeForm = document.getElementById("close-form");
+
+  if (addButton && addForm) {
+    addButton.addEventListener("click", function () {
+      addForm.classList.add("open");
+    });
+  }
+
+  if (closeForm && addForm) {
+    closeForm.addEventListener("click", function () {
+      addForm.classList.remove("open");
+    });
+  }
+
+});
+</script>
+
 <script>
 const STORAGE_KEY = "reminders_app_data";
 
@@ -623,21 +463,7 @@ function saveReminders(reminders) {
   );
 }
 
-
-  document.addEventListener("DOMContentLoaded", function () {
-
-  // =========================
-  // FRESH START ONCE
-  // =========================
-
-  const FRESH_START_KEY = "reminders_fresh_start_v1";
-
-  if (!localStorage.getItem(FRESH_START_KEY)) {
-    localStorage.removeItem(STORAGE_KEY);
-    localStorage.setItem(FRESH_START_KEY, "done");
-  }
-
-
+document.addEventListener("DOMContentLoaded", function () {
 
   // =========================
   // SUBTASK PROGRESS
@@ -934,8 +760,9 @@ const toast = document.getElementById("toast");
 
 toast.classList.add("show");
 
-      if (addForm) {
-        addForm.classList.remove("open");
+      const addFormAfterSave = document.getElementById("add-form");
+      if (addFormAfterSave) {
+        addFormAfterSave.classList.remove("open");
       }
 
 setTimeout(function () {
@@ -1353,230 +1180,9 @@ function loadReminders() {
   });
 
 }
-  // =========================
-  // NEW REMINDER FORM TOGGLE
-  // =========================
 
-  const addButton = document.querySelector(".add-button");
-  const addForm = document.getElementById("add-form");
-  const closeFormButton = document.getElementById("close-form");
 
-  if (addButton && addForm) {
-    addButton.addEventListener("click", function () {
-      addForm.classList.add("open");
-      addForm.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-    });
-  }
-
-  if (closeFormButton && addForm) {
-    closeFormButton.addEventListener("click", function () {
-      addForm.classList.remove("open");
-    });
-  }
-
-
-
-
-
-  // =========================
-  // SETTINGS MENU
-  // =========================
-
-  const settingsButton =
-    document.getElementById("settings-button");
-
-  const settingsPanel =
-    document.getElementById("settings-panel");
-
-  const dataTools =
-    document.querySelector(".data-tools");
-
-  if (settingsButton && settingsPanel) {
-
-    settingsButton.addEventListener("click", function () {
-
-      const isOpen =
-        settingsPanel.classList.toggle("open");
-
-      if (dataTools) {
-        dataTools.classList.toggle("open", isOpen);
-      }
-
-    });
-
-  }
-
-  // =========================
-  // BACKUP / RESTORE / RESET
-  // =========================
-
-  const backupButton =
-    document.getElementById("backup-reminders");
-
-  const restoreButton =
-    document.getElementById("restore-reminders");
-
-  const resetButton =
-    document.getElementById("reset-reminders");
-
-  const restoreFile =
-    document.getElementById("restore-file");
-
-
-  if (backupButton) {
-
-    backupButton.addEventListener("click", function () {
-
-      const reminders = getReminders();
-
-      const backup = {
-        app: "Reminders",
-        version: 1,
-        exportedAt: new Date().toISOString(),
-        reminders: reminders
-      };
-
-      const blob = new Blob(
-        [JSON.stringify(backup, null, 2)],
-        { type: "application/json" }
-      );
-
-      const url = URL.createObjectURL(blob);
-
-      const link = document.createElement("a");
-
-      link.href = url;
-      link.download =
-        "reminders-backup-" +
-        new Date().toISOString().slice(0, 10) +
-        ".json";
-
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-
-      URL.revokeObjectURL(url);
-
-    });
-
-  }
-
-
-  if (restoreButton && restoreFile) {
-
-    restoreButton.addEventListener("click", function () {
-      restoreFile.click();
-    });
-
-
-    restoreFile.addEventListener("change", function () {
-
-      const file = restoreFile.files[0];
-
-      if (!file) {
-        return;
-      }
-
-      const reader = new FileReader();
-
-
-      reader.onload = function (event) {
-
-        try {
-
-          const data =
-            JSON.parse(event.target.result);
-
-          const reminders =
-            Array.isArray(data)
-              ? data
-              : data.reminders;
-
-
-          if (!Array.isArray(reminders)) {
-            throw new Error("Invalid backup format.");
-          }
-
-
-          const validReminders =
-            reminders.filter(function (item) {
-
-              return (
-                item &&
-                item.id !== undefined &&
-                typeof item.title === "string" &&
-                typeof item.date === "string" &&
-                typeof item.time === "string" &&
-                typeof item.priority === "string" &&
-                Array.isArray(item.subtasks)
-              );
-
-            });
-
-
-          if (validReminders.length !== reminders.length) {
-            throw new Error("Backup contains invalid reminder data.");
-          }
-
-
-          saveReminders(validReminders);
-
-          alert(
-            "Backup restored successfully. The page will reload."
-          );
-
-          window.location.reload();
-
-        } catch (error) {
-
-          alert(
-            "Restore failed. Please choose a valid Reminders backup file."
-          );
-
-        } finally {
-
-          restoreFile.value = "";
-
-        }
-
-      };
-
-
-      reader.readAsText(file);
-
-    });
-
-  }
-
-
-  if (resetButton) {
-
-    resetButton.addEventListener("click", function () {
-
-      const confirmed =
-        confirm(
-          "Reset all saved reminders? This cannot be undone unless you have a backup."
-        );
-
-
-      if (!confirmed) {
-        return;
-      }
-
-
-      localStorage.removeItem(STORAGE_KEY);
-
-      window.location.reload();
-
-    });
-
-  }
-
-
-  loadReminders();
+loadReminders();
 </script>
 
 <div id="toast">
