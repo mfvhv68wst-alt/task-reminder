@@ -264,6 +264,93 @@ h1 {
     translateX(-50%)
     translateY(0);
 }
+
+/* Responsive layout polish */
+html {
+  background: #111111;
+}
+
+body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.app-header,
+.add-form,
+.reminder-list {
+  width: 100%;
+  max-width: 600px;
+}
+
+.app-header {
+  margin: 0 auto 24px;
+}
+
+.add-form {
+  margin: 0 auto 32px;
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 20px 16px 32px;
+  }
+
+  .app-header {
+    margin-bottom: 24px;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  .add-button {
+    width: 48px;
+    height: 48px;
+    font-size: 28px;
+    flex: 0 0 auto;
+  }
+
+  .add-form {
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  .reminder-card {
+    padding: 16px;
+    border-radius: 18px;
+  }
+}
+
+
+.add-form {
+  display: none;
+  position: relative;
+}
+
+.add-form.open {
+  display: block;
+}
+
+.close-form {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #444444;
+  border-radius: 50%;
+  background: transparent;
+  color: #ffffff;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.close-form:hover {
+  background: #ffffff;
+  color: #111111;
+}
+
 </style>
 </head>
 
@@ -282,8 +369,13 @@ h1 {
     <button class="add-button" aria-label="Add reminder">
       +
     </button>
+  </header>
 
-<div class="add-form">
+
+
+<div class="add-form" id="add-form">
+
+  <button type="button" class="close-form" id="close-form" aria-label="Close">×</button>
 
   <h2>New Reminder</h2>
 
@@ -343,7 +435,7 @@ h1 {
 
 </div>
 
-  </header>
+  
 
 
   <main class="reminder-list">
@@ -397,9 +489,7 @@ h1 {
 
 
 
-<div class="task-status">
-
-</div>
+<div class="task-status">Not completed</div>
 
       </div>
 
@@ -772,6 +862,10 @@ subtaskInputs.innerHTML = "";
 const toast = document.getElementById("toast");
 
 toast.classList.add("show");
+
+      if (addForm) {
+        addForm.classList.remove("open");
+      }
 
 setTimeout(function () {
   toast.classList.remove("show");
@@ -1190,7 +1284,32 @@ function loadReminders() {
 }
 
 
-loadReminders();
+
+  // =========================
+  // NEW REMINDER FORM TOGGLE
+  // =========================
+
+  const addButton = document.querySelector(".add-button");
+  const addForm = document.getElementById("add-form");
+  const closeFormButton = document.getElementById("close-form");
+
+  if (addButton && addForm) {
+    addButton.addEventListener("click", function () {
+      addForm.classList.add("open");
+      addForm.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+  }
+
+  if (closeFormButton && addForm) {
+    closeFormButton.addEventListener("click", function () {
+      addForm.classList.remove("open");
+    });
+  }
+
+  loadReminders();
 </script>
 
 <div id="toast">
