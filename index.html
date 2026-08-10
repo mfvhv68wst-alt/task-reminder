@@ -264,49 +264,6 @@ h1 {
     translateX(-50%)
     translateY(0);
 }
-
-.add-form {
-  display: none;
-}
-
-.add-form.open {
-  display: block;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.add-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  line-height: 1;
-  text-align: center;
-}
-
-
-.close-form {
-  float: right;
-  width: 34px;
-  height: 34px;
-  border: 1px solid #444444;
-  border-radius: 50%;
-  background: transparent;
-  color: #ffffff;
-  font-size: 22px;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.close-form:hover {
-  background: #ffffff;
-  color: #111111;
-}
-
 </style>
 </head>
 
@@ -322,27 +279,11 @@ h1 {
       <p class="date">Monday, August 10</p>
     </div>
 
-    <button type="button" class="add-button" id="add-button" aria-label="Add reminder">
+    <button class="add-button" aria-label="Add reminder">
       +
     </button>
 
-
-
-  <div id="subtask-inputs"></div>
-
-</div>
-
-  <button id="save-reminder">
-    Save Reminder
-  </button>
-
-</div>
-
-  </header>
-
-  <div class="add-form" id="add-form">
-
-  <button type="button" id="close-form" class="close-form" aria-label="Close">×</button>
+<div class="add-form">
 
   <h2>New Reminder</h2>
 
@@ -392,6 +333,17 @@ h1 {
     </button>
   </div>
 
+  <div id="subtask-inputs"></div>
+
+</div>
+
+  <button id="save-reminder">
+    Save Reminder
+  </button>
+
+</div>
+
+  </header>
 
 
   <main class="reminder-list">
@@ -400,48 +352,109 @@ h1 {
     <!-- IMPORTANT -->
 
     <section class="priority-section important">
+
       <h2>Important</h2>
+
+      <div class="reminder-card">
+
+        <div class="card-top">
+
+          <div>
+            <h3>Print Andi's Order</h3>
+            <p>Today · 09:00</p>
+          </div>
+
+          <span class="priority-dot"></span>
+
+        </div>
+
+
+        <div class="subtasks">
+
+          <label>
+            <input type="checkbox">
+            Glass illustration
+          </label>
+
+          <label>
+            <input type="checkbox">
+            Cat illustration
+          </label>
+
+          <label>
+            <input type="checkbox">
+            Car illustration
+          </label>
+
+        </div>
+
+
+        <div class="progress">
+  0 / 3 completed
+</div>
+
+
+
+
+
+<div class="task-status">
+
+</div>
+
+      </div>
+
     </section>
 
 
     <!-- MEDIUM -->
 
     <section class="priority-section medium">
+
       <h2>Medium</h2>
+
+      <div class="reminder-card">
+
+        <div class="card-top">
+
+          <div>
+            <h3>Clean the workspace</h3>
+            <p>Tomorrow · 10:00</p>
+          </div>
+
+          <span class="priority-dot"></span>
+
+        </div>
+
+      </div>
+
     </section>
 
 
     <!-- LOW -->
 
     <section class="priority-section low">
+
       <h2>Low</h2>
+
+      <div class="reminder-card">
+
+        <div class="card-top">
+
+          <div>
+            <h3>Organize photos</h3>
+            <p>Friday · 18:00</p>
+          </div>
+
+          <span class="priority-dot"></span>
+
+        </div>
+
+      </div>
+
     </section>
 
 
   </main>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-  const addButton = document.getElementById("add-button");
-  const addForm = document.getElementById("add-form");
-  const closeForm = document.getElementById("close-form");
-
-  if (addButton && addForm) {
-    addButton.addEventListener("click", function () {
-      addForm.classList.add("open");
-    });
-  }
-
-  if (closeForm && addForm) {
-    closeForm.addEventListener("click", function () {
-      addForm.classList.remove("open");
-    });
-  }
-
-});
-</script>
-
 <script>
 const STORAGE_KEY = "reminders_app_data";
 
@@ -759,11 +772,6 @@ subtaskInputs.innerHTML = "";
 const toast = document.getElementById("toast");
 
 toast.classList.add("show");
-
-      const addFormAfterSave = document.getElementById("add-form");
-      if (addFormAfterSave) {
-        addFormAfterSave.classList.remove("open");
-      }
 
 setTimeout(function () {
   toast.classList.remove("show");
