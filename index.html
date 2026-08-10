@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Reminders</title>
+
+  <style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #111111;
+  color: #f5f5f5;
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.app-header {
+  max-width: 600px;
+  margin: 0 auto 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.greeting {
+  color: #888888;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+h1 {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.date {
+  color: #888888;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.add-button {
+  width: 52px;
+  height: 52px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: transparent;
+  color: #ffffff;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.reminder-list {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.priority-section {
+  margin-bottom: 30px;
+}
+
+.priority-section h2 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.reminder-card {
+  background: #1b1b1b;
+  border: 1px solid #303030;
+  border-radius: 20px;
+  padding: 18px;
+  margin-bottom: 12px;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.card-top h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.card-top p {
+  color: #888888;
+  font-size: 13px;
+}
+
+.priority-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ff5c5c;
+  display: block;
+}
+
+.medium .priority-dot {
+  background: #ffd166;
+}
+
+.low .priority-dot {
+  background: #6dd5ed;
+}
+
+.subtasks {
+  margin-top: 18px;
+  padding-top: 15px;
+  border-top: 1px dashed #333333;
+}
+
+.subtasks label {
+  display: block;
+  color: #cccccc;
+  font-size: 14px;
+  margin-bottom: 11px;
+  cursor: pointer;
+}
+
+.subtasks input {
+  margin-right: 8px;
+}
+
+.progress {
+  margin-top: 15px;
+  color: #777777;
+  font-size: 12px;
+}
+.task-status {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #888888;
+}
+
+.task-status.completed {
+  color: #7ee787;
+  font-weight: bold;
+}
+
+.add-form {
+  max-width: 600px;
+  margin: 0 auto 32px;
+  padding: 20px;
+  background: #181818;
+  border: 1px dashed #444444;
+  border-radius: 20px;
+}
+
+.add-form h2 {
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.add-form label {
+  display: block;
+  margin-bottom: 16px;
+  color: #aaaaaa;
+  font-size: 13px;
+}
+
+.add-form input,
+.add-form select {
+  width: 100%;
+  margin-top: 7px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #383838;
+  background: #111111;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+#save-reminder {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #ffffff;
+  border-radius: 12px;
+  background: transparent;
+  color: #ffffff;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+#save-reminder:hover {
+  background: #ffffff;
+  color: #111111;
+}
+
+.add-form input[type="date"]::-webkit-calendar-picker-indicator,
+.add-form input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+
+  background: #7c6cff;
+  color: #ffffff;
+
+  padding: 12px 20px;
+  border-radius: 14px;
+
+  font-size: 14px;
+  font-weight: bold;
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition: 0.3s ease;
+
+  z-index: 999;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+#toast {
+  position: fixed;
+
+  bottom: 30px;
+  left: 50%;
+
+  transform: translateX(-50%) translateY(20px);
+
+  background: #7c6cff;
+  color: #ffffff;
+
+  padding: 12px 20px;
+
+  border-radius: 14px;
+
+  font-size: 14px;
+  font-weight: bold;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  transition: all 0.3s ease;
+
+  z-index: 9999;
+}
+
+#toast.show {
+  opacity: 1;
+
+  transform:
+    translateX(-50%)
+    translateY(0);
+}
+</style>
+</head>
+
+<body>
+
+  <header class="app-header">
+
+    <div>
+      <p class="greeting">Good morning!</p>
+
+      <h1>Reminders</h1>
+
+      <p class="date">Monday, August 10</p>
+    </div>
+
+    <button class="add-button" aria-label="Add reminder">
+      +
+    </button>
+
+<div class="add-form">
+
+  <h2>New Reminder</h2>
+
+  <label>
+    Title
+    <input type="text" id="reminder-title" placeholder="What do you need to do?">
+  </label>
+
+  <label>
+    Date
+    <input type="date" id="reminder-date">
+  </label>
+
+  <label>
+    Time
+    <input type="time" id="reminder-time">
+  </label>
+
+  <label>
+    Priority
+    <select id="reminder-priority">
+      <option value="important">Important</option>
+      <option value="medium">Medium</option>
+      <option value="low">Low</option>
+    </select>
+  </label>
+
+  <label>
+    Repeat
+    <select id="reminder-repeat">
+      <option value="none">Doesn't repeat</option>
+      <option value="weekly">Every week</option>
+      <option value="monthly">Every month</option>
+    </select>
+  </label>
+
+  <div class="subtask-form">
+
+  <div class="subtask-form-header">
+    <span>Subtasks</span>
+
+    <button
+      type="button"
+      id="add-subtask"
+    >
+      + Add
+    </button>
+  </div>
+
+  <div id="subtask-inputs"></div>
+
+</div>
+
+  <button id="save-reminder">
+    Save Reminder
+  </button>
+
+</div>
+
+  </header>
+
+
+  <main class="reminder-list">
+
+
+    <!-- IMPORTANT -->
+
+    <section class="priority-section important">
+
+      <h2>Important</h2>
+
+      <div class="reminder-card">
+
+        <div class="card-top">
+
+          <div>
+            <h3>Print Andi's Order</h3>
+            <p>Today · 09:00</p>
+          </div>
+
+          <span class="priority-dot"></span>
+
+        </div>
+
+
+        <div class="subtasks">
+
+          <label>
+            <input type="checkbox">
+            Glass illustration
+          </label>
+
+          <label>
+            <input type="checkbox">
+            Cat illustration
+          </label>
+
+          <label>
+            <input type="checkbox">
+            Car illustration
+          </label>
+
+        </div>
+
+
+        <div class="progress">
+  0 / 3 completed
+</div>
+
+
+
+
+
+<div class="task-status">
+
+</div>
+
+      </div>
+
+    </section>
+
+
+    <!-- MEDIUM -->
+
+    <section class="priority-section medium">
+
+      <h2>Medium</h2>
+
+      <div class="reminder-card">
+
+        <div class="card-top">
+
+          <div>
+            <h3>Clean the workspace</h3>
+            <p>Tomorrow · 10:00</p>
+          </div>
+
+          <span class="priority-dot"></span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- LOW -->
+
+    <section class="priority-section low">
+
+      <h2>Low</h2>
+
+      <div class="reminder-card">
+
+        <div class="card-top">
+
+          <div>
+            <h3>Organize photos</h3>
+            <p>Friday · 18:00</p>
+          </div>
+
+          <span class="priority-dot"></span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </main>
+<script>
+const STORAGE_KEY = "reminders_app_data";
+
+function getReminders() {
+  const data = localStorage.getItem(STORAGE_KEY);
+
+  if (!data) {
+    return [];
+  }
+
+  return JSON.parse(data);
+}
+
+
+function saveReminders(reminders) {
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(reminders)
+  );
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  // =========================
+  // SUBTASK PROGRESS
+  // =========================
+
+  const checkboxes = document.querySelectorAll(
+    ".subtasks input[type='checkbox']"
+  );
+
+  const progress = document.querySelector(".progress");
+  const taskStatus = document.querySelector(".task-status");
+
+
+  function updateProgress() {
+
+    const total = checkboxes.length;
+
+    let completed = 0;
+
+    checkboxes.forEach(function (checkbox) {
+
+      if (checkbox.checked) {
+        completed++;
+      }
+
+    });
+
+
+    progress.textContent =
+      `${completed} / ${total} completed`;
+
+
+    if (completed === total) {
+
+      taskStatus.textContent = "Completed";
+
+      taskStatus.classList.add("completed");
+
+    } else {
+
+      taskStatus.textContent = "Not completed";
+
+      taskStatus.classList.remove("completed");
+
+    }
+
+  }
+
+
+  checkboxes.forEach(function (checkbox) {
+
+    checkbox.addEventListener(
+      "change",
+      updateProgress
+    );
+
+  });
+
+
+  updateProgress();
+
+
+
+  // =========================
+  // SAVE REMINDER
+  // =========================
+
+  const saveReminderButton =
+    document.getElementById("save-reminder");
+
+
+  saveReminderButton.addEventListener(
+    "click",
+    function () {
+
+      const title =
+        document.getElementById("reminder-title").value.trim();
+
+      const date =
+        document.getElementById("reminder-date").value;
+
+      const time =
+        document.getElementById("reminder-time").value;
+
+      const priority =
+        document.getElementById("reminder-priority").value;
+
+      const repeat =
+        document.getElementById("reminder-repeat").value;
+
+
+      // Title wajib diisi
+
+      if (title === "") {
+
+        alert("Please enter a reminder title.");
+
+        return;
+
+      }
+
+
+      // Cari bagian priority
+
+      const section =
+        document.querySelector(
+          `.priority-section.${priority}`
+        );
+
+
+      // Kalau section tidak ditemukan
+
+      if (!section) {
+
+        alert("Priority section not found.");
+
+        return;
+
+      }
+
+
+      // Buat kartu baru
+
+      const newCard = document.createElement("div");
+
+newCard.className = "reminder-card";
+
+const reminderId = Date.now();
+
+newCard.dataset.reminderId = reminderId;
+
+
+
+
+// Ambil semua subtask dari form
+const subtaskElements =
+  document.querySelectorAll(".new-subtask");
+
+const subtaskList = [];
+
+subtaskElements.forEach(function (input) {
+
+  const text = input.value.trim();
+
+  if (text !== "") {
+    subtaskList.push(text);
+  }
+
+});
+
+
+// Buat HTML subtask
+let subtasksHTML = "";
+
+subtaskList.forEach(function (subtask) {
+
+  subtasksHTML += `
+    <label>
+      <input type="checkbox">
+      ${subtask}
+    </label>
+  `;
+
+});
+
+
+// Buat kartu reminder
+newCard.innerHTML = `
+
+  <div class="card-top">
+
+    <div>
+      <h3>${title}</h3>
+      <p>${date} · ${time}</p>
+    </div>
+
+    <span class="priority-dot"></span>
+
+  </div>
+
+
+  <div class="subtasks">
+
+    ${subtasksHTML}
+
+ <div class="progress">
+  ${
+    subtaskList.length > 0
+      ? `0 / ${subtaskList.length} completed`
+      : ""
+  }
+</div>
+
+<div class="task-status">
+  Not completed
+</div>
+
+<div class="task-action"></div>
+
+
+ 
+`;
+if (subtaskList.length === 0) {
+
+  const doneButton = document.createElement("button");
+
+  doneButton.className = "done-button";
+
+  doneButton.textContent = "✓ Done";
+
+  const taskStatus =
+    newCard.querySelector(".task-status");
+
+  doneButton.addEventListener("click", function () {
+
+    taskStatus.textContent = "Completed";
+
+    taskStatus.classList.add("completed");
+
+    doneButton.textContent = "↶ Undo";
+
+    doneButton.classList.add("undo");
+
+    doneButton.onclick = function () {
+
+      taskStatus.textContent = "Not completed";
+
+      taskStatus.classList.remove("completed");
+
+      doneButton.textContent = "✓ Done";
+
+      doneButton.classList.remove("undo");
+
+    };
+
+  });
+
+  newCard
+    .querySelector(".task-action")
+    .appendChild(doneButton);
+}
+
+      // Masukkan kartu ke priority section
+
+      section.appendChild(newCard);
+
+      const reminders = getReminders();
+
+reminders.push({
+  id: reminderId,
+  title: title,
+  date: date,
+  time: time,
+  priority: priority,
+  repeat: repeat,
+  subtasks: subtaskList,
+  completed: false
+});
+
+saveReminders(reminders);
+
+
+      // Kosongkan form
+
+      document.getElementById(
+        "reminder-title"
+      ).value = "";
+
+      document.getElementById(
+        "reminder-date"
+      ).value = "";
+
+      document.getElementById(
+        "reminder-time"
+      ).value = "";
+const subtaskInputs =
+  document.getElementById("subtask-inputs");
+
+subtaskInputs.innerHTML = "";
+
+      console.log(
+        "Reminder created:",
+        {
+          title,
+          date,
+          time,
+          priority,
+          repeat
+        }
+      );
+
+
+const toast = document.getElementById("toast");
+
+toast.classList.add("show");
+
+setTimeout(function () {
+  toast.classList.remove("show");
+}, 2000);
+    }
+  );
+
+});
+
+const addSubtaskButton =
+  document.getElementById("add-subtask");
+
+const subtaskInputs =
+  document.getElementById("subtask-inputs");
+
+
+addSubtaskButton.addEventListener(
+  "click",
+  function () {
+
+    const subtaskRow =
+      document.createElement("div");
+
+    subtaskRow.className =
+      "subtask-input-row";
+
+
+    subtaskRow.innerHTML = `
+      <input
+        type="text"
+        class="new-subtask"
+        placeholder="Enter subtask..."
+      >
+
+      <button
+        type="button"
+        class="remove-subtask"
+      >
+        ×
+      </button>
+    `;
+
+
+    subtaskInputs.appendChild(
+      subtaskRow
+    );
+
+
+    const removeButton =
+      subtaskRow.querySelector(
+        ".remove-subtask"
+      );
+
+
+    removeButton.addEventListener(
+      "click",
+      function () {
+
+        subtaskRow.remove();
+
+      }
+    );
+
+  }
+);
+
+document.addEventListener("change", function (event) {
+
+  if (
+    event.target.matches(
+      ".reminder-card .subtasks input[type='checkbox']"
+    )
+  ) {
+
+    const card =
+      event.target.closest(".reminder-card");
+
+    const checkboxes =
+      card.querySelectorAll(
+        ".subtasks input[type='checkbox']"
+      );
+
+    const progress =
+      card.querySelector(".progress");
+
+    const taskStatus =
+      card.querySelector(".task-status");
+
+    let completed = 0;
+
+    checkboxes.forEach(function (checkbox) {
+
+      if (checkbox.checked) {
+        completed++;
+      }
+
+    });
+
+    const total = checkboxes.length;
+
+    progress.textContent =
+      `${completed} / ${total} completed`;
+
+    if (completed === total && total > 0) {
+
+      taskStatus.textContent = "Completed";
+
+      taskStatus.classList.add("completed");
+
+    } else {
+
+      taskStatus.textContent = "Not completed";
+
+      taskStatus.classList.remove("completed");
+
+    }
+const reminders = getReminders();
+
+const reminderId =
+  Number(card.dataset.reminderId);
+
+const reminder = reminders.find(function (item) {
+  return item.id === reminderId;
+});
+
+if (reminder) {
+
+  reminder.subtaskCompleted = [];
+
+  checkboxes.forEach(function (checkbox) {
+
+    reminder.subtaskCompleted.push(
+      checkbox.checked
+    );
+
+  });
+
+  reminder.completed =
+    completed === total && total > 0;
+
+  saveReminders(reminders);
+}
+  }
+
+});
+
+function loadReminders() {
+
+  const reminders = getReminders();
+
+  reminders.forEach(function (reminder) {
+
+    const section = document.querySelector(
+      `.priority-section.${reminder.priority}`
+    );
+
+    if (!section) {
+      return;
+    }
+
+
+    // =========================
+    // CREATE CARD
+    // =========================
+
+    const newCard = document.createElement("div");
+
+    newCard.className = "reminder-card";
+
+    newCard.dataset.reminderId = reminder.id;
+
+
+    // =========================
+    // SUBTASKS
+    // =========================
+
+    let subtasksHTML = "";
+
+    let completedCount = 0;
+
+    const savedSubtasks =
+      reminder.subtaskCompleted || [];
+
+
+    reminder.subtasks.forEach(
+      function (subtask, index) {
+
+        const isChecked =
+          savedSubtasks[index] === true;
+
+        if (isChecked) {
+          completedCount++;
+        }
+
+
+        subtasksHTML += `
+          <label>
+
+            <input
+              type="checkbox"
+              ${isChecked ? "checked" : ""}
+            >
+
+            ${subtask}
+
+          </label>
+        `;
+
+      }
+    );
+
+
+    const totalSubtasks =
+      reminder.subtasks.length;
+
+
+    // =========================
+    // STATUS
+    // =========================
+
+    let statusText = "Not completed";
+
+    let statusClass = "";
+
+
+    if (
+      totalSubtasks > 0 &&
+      completedCount === totalSubtasks
+    ) {
+
+      statusText = "Completed";
+
+      statusClass = "completed";
+
+    }
+
+
+    // =========================
+    // PROGRESS
+    // =========================
+
+    let progressHTML = "";
+
+    if (totalSubtasks > 0) {
+
+      progressHTML = `
+        <div class="progress">
+          ${completedCount} / ${totalSubtasks} completed
+        </div>
+      `;
+
+    }
+
+
+    // =========================
+    // CARD HTML
+    // =========================
+
+    newCard.innerHTML = `
+
+      <div class="card-top">
+
+        <div>
+
+          <h3>${reminder.title}</h3>
+
+          <p>
+            ${reminder.date} · ${reminder.time}
+          </p>
+
+        </div>
+
+        <span class="priority-dot"></span>
+
+      </div>
+
+
+      ${
+        totalSubtasks > 0
+          ? `
+            <div class="subtasks">
+              ${subtasksHTML}
+            </div>
+          `
+          : ""
+      }
+
+
+      ${progressHTML}
+
+
+      <div class="task-status ${statusClass}">
+        ${statusText}
+      </div>
+
+
+      <div class="task-action"></div>
+
+    `;
+
+
+    // =========================
+    // TASK WITHOUT SUBTASK
+    // =========================
+
+    if (totalSubtasks === 0) {
+
+      const doneButton =
+        document.createElement("button");
+
+      doneButton.className =
+        "done-button";
+
+
+      if (reminder.completed) {
+
+        doneButton.textContent =
+          "↶ Undo";
+
+      } else {
+
+        doneButton.textContent =
+          "✓ Done";
+
+      }
+
+
+      const taskStatus =
+        newCard.querySelector(".task-status");
+
+
+      if (reminder.completed) {
+
+        taskStatus.textContent =
+          "Completed";
+
+        taskStatus.classList.add(
+          "completed"
+        );
+
+      }
+
+
+      doneButton.addEventListener(
+        "click",
+        function () {
+
+          const reminders =
+            getReminders();
+
+          const currentReminder =
+            reminders.find(function (item) {
+
+              return item.id === reminder.id;
+
+            });
+
+
+          if (!currentReminder) {
+            return;
+          }
+
+
+          currentReminder.completed =
+            !currentReminder.completed;
+
+
+          saveReminders(reminders);
+
+
+          if (currentReminder.completed) {
+
+            taskStatus.textContent =
+              "Completed";
+
+            taskStatus.classList.add(
+              "completed"
+            );
+
+            doneButton.textContent =
+              "↶ Undo";
+
+          } else {
+
+            taskStatus.textContent =
+              "Not completed";
+
+            taskStatus.classList.remove(
+              "completed"
+            );
+
+            doneButton.textContent =
+              "✓ Done";
+
+          }
+
+        }
+      );
+
+
+      newCard
+        .querySelector(".task-action")
+        .appendChild(doneButton);
+
+    }
+
+
+    // =========================
+    // ADD CARD TO PAGE
+    // =========================
+
+    section.appendChild(newCard);
+
+  });
+
+}
+
+
+loadReminders();
+</script>
+
+<div id="toast">
+  ✓ Reminder saved
+</div>
+
+</body>
+</html>
