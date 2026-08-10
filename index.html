@@ -1196,6 +1196,15 @@ loadReminders();
 <div id="toast">
   ✓ Reminder saved
 </div>
+<script>
+  // Hapus contoh task bawaan dari HTML.
+  // Tidak menghapus reminder yang tersimpan di Local Storage.
 
+  document.querySelectorAll(".priority-section").forEach(function (section) {
+    section.querySelectorAll(".reminder-card").forEach(function (card) {
+      card.remove();
+    });
+  });
+</script>
 </body>
 </html>
