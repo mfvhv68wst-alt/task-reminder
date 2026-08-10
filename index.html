@@ -351,126 +351,6 @@ body {
   color: #111111;
 }
 
-
-.add-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  line-height: 1;
-  text-align: center;
-}
-
-
-.data-tools {
-  width: 100%;
-  max-width: 600px;
-  margin: 8px auto 0;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.data-tools button {
-  flex: 1 1 0;
-  min-width: 90px;
-  padding: 11px 14px;
-  border: 1px solid #383838;
-  border-radius: 12px;
-  background: #181818;
-  color: #ffffff;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.data-tools button:hover {
-  background: #ffffff;
-  color: #111111;
-}
-
-@media (max-width: 640px) {
-  .data-tools {
-    gap: 8px;
-  }
-
-  .data-tools button {
-    min-width: 0;
-  }
-}
-
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.settings-button {
-  width: 44px;
-  height: 44px;
-  border: 1px solid #383838;
-  border-radius: 50%;
-  background: transparent;
-  color: #ffffff;
-  font-size: 20px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  cursor: pointer;
-}
-
-.settings-button:hover {
-  background: #ffffff;
-  color: #111111;
-}
-
-.data-tools {
-  display: none;
-  margin-top: 12px;
-}
-
-.data-tools.open {
-  display: flex;
-}
-
-.settings-panel {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto 24px;
-  padding: 18px;
-  background: #181818;
-  border: 1px solid #303030;
-  border-radius: 18px;
-  display: none;
-}
-
-.settings-panel.open {
-  display: block;
-}
-
-.settings-panel h2 {
-  font-size: 18px;
-  margin-bottom: 6px;
-}
-
-.settings-panel p {
-  color: #888888;
-  font-size: 13px;
-  margin-bottom: 14px;
-}
-
-@media (max-width: 640px) {
-  .header-actions {
-    gap: 8px;
-  }
-
-  .settings-button {
-    width: 42px;
-    height: 42px;
-  }
-}
-
 </style>
 </head>
 
@@ -486,15 +366,9 @@ body {
       <p class="date">Monday, August 10</p>
     </div>
 
-    <div class="header-actions">
-      <button class="settings-button" id="settings-button" aria-label="Settings">
-        ⚙
-      </button>
-
-      <button class="add-button" aria-label="Add reminder">
-        +
-      </button>
-    </div>
+    <button class="add-button" aria-label="Add reminder">
+      +
+    </button>
   </header>
 
 
@@ -570,40 +444,39 @@ body {
     <!-- IMPORTANT -->
 
     <section class="priority-section important">
+
       <h2>Important</h2>
+
+      
+
     </section>
 
 
     <!-- MEDIUM -->
 
     <section class="priority-section medium">
+
       <h2>Medium</h2>
+
+      
+
     </section>
 
 
     <!-- LOW -->
 
     <section class="priority-section low">
+
       <h2>Low</h2>
+
+      
+
     </section>
 
 
-  
-<section class="settings-panel" id="settings-panel" aria-label="Settings">
-  <h2>Settings</h2>
-  <p>Manage your reminder data.</p>
-
-  <div class="data-tools" aria-label="Data tools">
-    <button type="button" id="backup-reminders">Backup</button>
-    <button type="button" id="restore-reminders">Restore</button>
-    <button type="button" id="reset-reminders">Reset</button>
-    <input type="file" id="restore-file" accept=".json,application/json" hidden>
-  </div>
-</section>
-
-</main>
+  </main>
 <script>
-const STORAGE_KEY = "reminders_app_data_v2";
+const STORAGE_KEY = "reminders_app_data";
 
 function getReminders() {
   const data = localStorage.getItem(STORAGE_KEY);
@@ -1365,203 +1238,6 @@ function loadReminders() {
       addForm.classList.remove("open");
     });
   }
-
-
-
-  // =========================
-  // SETTINGS MENU
-  // =========================
-
-  const settingsButton =
-    document.getElementById("settings-button");
-
-  const settingsPanel =
-    document.getElementById("settings-panel");
-
-  const dataTools =
-    document.querySelector(".data-tools");
-
-  if (settingsButton && settingsPanel) {
-
-    settingsButton.addEventListener("click", function () {
-
-      const isOpen =
-        settingsPanel.classList.toggle("open");
-
-      if (dataTools) {
-        dataTools.classList.toggle("open", isOpen);
-      }
-
-    });
-
-  }
-
-  // =========================
-  // BACKUP / RESTORE / RESET
-  // =========================
-
-  const backupButton =
-    document.getElementById("backup-reminders");
-
-  const restoreButton =
-    document.getElementById("restore-reminders");
-
-  const resetButton =
-    document.getElementById("reset-reminders");
-
-  const restoreFile =
-    document.getElementById("restore-file");
-
-
-  if (backupButton) {
-
-    backupButton.addEventListener("click", function () {
-
-      const reminders = getReminders();
-
-      const backup = {
-        app: "Reminders",
-        version: 1,
-        exportedAt: new Date().toISOString(),
-        reminders: reminders
-      };
-
-      const blob = new Blob(
-        [JSON.stringify(backup, null, 2)],
-        { type: "application/json" }
-      );
-
-      const url = URL.createObjectURL(blob);
-
-      const link = document.createElement("a");
-
-      link.href = url;
-      link.download =
-        "reminders-backup-" +
-        new Date().toISOString().slice(0, 10) +
-        ".json";
-
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-
-      URL.revokeObjectURL(url);
-
-    });
-
-  }
-
-
-  if (restoreButton && restoreFile) {
-
-    restoreButton.addEventListener("click", function () {
-      restoreFile.click();
-    });
-
-
-    restoreFile.addEventListener("change", function () {
-
-      const file = restoreFile.files[0];
-
-      if (!file) {
-        return;
-      }
-
-      const reader = new FileReader();
-
-
-      reader.onload = function (event) {
-
-        try {
-
-          const data =
-            JSON.parse(event.target.result);
-
-          const reminders =
-            Array.isArray(data)
-              ? data
-              : data.reminders;
-
-
-          if (!Array.isArray(reminders)) {
-            throw new Error("Invalid backup format.");
-          }
-
-
-          const validReminders =
-            reminders.filter(function (item) {
-
-              return (
-                item &&
-                item.id !== undefined &&
-                typeof item.title === "string" &&
-                typeof item.date === "string" &&
-                typeof item.time === "string" &&
-                typeof item.priority === "string" &&
-                Array.isArray(item.subtasks)
-              );
-
-            });
-
-
-          if (validReminders.length !== reminders.length) {
-            throw new Error("Backup contains invalid reminder data.");
-          }
-
-
-          saveReminders(validReminders);
-
-          alert(
-            "Backup restored successfully. The page will reload."
-          );
-
-          window.location.reload();
-
-        } catch (error) {
-
-          alert(
-            "Restore failed. Please choose a valid Reminders backup file."
-          );
-
-        } finally {
-
-          restoreFile.value = "";
-
-        }
-
-      };
-
-
-      reader.readAsText(file);
-
-    });
-
-  }
-
-
-  if (resetButton) {
-
-    resetButton.addEventListener("click", function () {
-
-      const confirmed =
-        confirm(
-          "Reset all saved reminders? This cannot be undone unless you have a backup."
-        );
-
-
-      if (!confirmed) {
-        return;
-      }
-
-
-      localStorage.removeItem(STORAGE_KEY);
-
-      window.location.reload();
-
-    });
-
-  }
-
 
   loadReminders();
 </script>
