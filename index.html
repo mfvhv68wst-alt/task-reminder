@@ -1099,7 +1099,9 @@ if (totalSubtasks === 0) {
       taskStatus.textContent =
         "Completed";
 
-      taskStatus.classList.add("completed");
+      taskStatus.classList.add(
+        "completed"
+      );
 
       doneButton.textContent =
         "↶ Undo";
@@ -1109,7 +1111,9 @@ if (totalSubtasks === 0) {
       taskStatus.textContent =
         "Not completed";
 
-      taskStatus.classList.remove("completed");
+      taskStatus.classList.remove(
+        "completed"
+      );
 
       doneButton.textContent =
         "✓ Done";
@@ -1142,18 +1146,19 @@ if (totalSubtasks === 0) {
       }
 
 
-      // Toggle Completed
       currentReminder.completed =
         !currentReminder.completed;
 
 
-      // Simpan ke Local Storage
       saveReminders(reminders);
 
 
-      // =========================
-      // PINDAH KE COMPLETED
-      // =========================
+      reminder.completed =
+        currentReminder.completed;
+
+
+      updateTaskDisplay();
+
 
       if (currentReminder.completed) {
 
@@ -1170,14 +1175,7 @@ if (totalSubtasks === 0) {
 
         }
 
-      }
-
-
-      // =========================
-      // KEMBALI KE PRIORITY
-      // =========================
-
-      else {
+      } else {
 
         const originalSection =
           document.querySelector(
@@ -1194,9 +1192,6 @@ if (totalSubtasks === 0) {
 
       }
 
-
-      updateTaskDisplay();
-
     }
   );
 
@@ -1208,12 +1203,32 @@ if (totalSubtasks === 0) {
 }
 
 
-    // =========================
-    // ADD CARD TO PAGE
-    // =========================
+/* =========================
+   INITIAL CARD LOCATION
+   ========================= */
 
-    section.appendChild(newCard);
+if (reminder.completed) {
 
+  const completedList =
+    document.getElementById(
+      "completed-list"
+    );
+
+  if (completedList) {
+
+    completedList.appendChild(
+      newCard
+    );
+
+  }
+
+} else {
+
+  section.appendChild(
+    newCard
+  );
+
+}
   });
 
 }
