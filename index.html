@@ -401,64 +401,73 @@ function saveReminders(reminders) {
 document.addEventListener("DOMContentLoaded", function () {
 
   // =========================
-  // SUBTASK PROGRESS
-  // =========================
+// SUBTASK PROGRESS
+// =========================
 
-  const checkboxes = document.querySelectorAll(
-    ".subtasks input[type='checkbox']"
-  );
+const checkboxes = document.querySelectorAll(
+  ".subtasks input[type='checkbox']"
+);
 
-  const progress = document.querySelector(".progress");
-  const taskStatus = document.querySelector(".task-status");
-
-
-  function updateProgress() {
-
-    const total = checkboxes.length;
-
-    let completed = 0;
-
-    checkboxes.forEach(function (checkbox) {
-
-      if (checkbox.checked) {
-        completed++;
-      }
-
-    });
+const progress = document.querySelector(".progress");
+const taskStatus = document.querySelector(".task-status");
 
 
-    progress.textContent =
-      `${completed} / ${total} completed`;
+function updateProgress() {
 
+  const total = checkboxes.length;
 
-    if (completed === total) {
-
-      taskStatus.textContent = "Completed";
-
-      taskStatus.classList.add("completed");
-
-    } else {
-
-      taskStatus.textContent = "Not completed";
-
-      taskStatus.classList.remove("completed");
-
-    }
-
-  }
-
+  let completed = 0;
 
   checkboxes.forEach(function (checkbox) {
 
-    checkbox.addEventListener(
-      "change",
-      updateProgress
-    );
+    if (checkbox.checked) {
+      completed++;
+    }
 
   });
 
 
-  updateProgress();
+  // Tidak ada contoh task saat halaman pertama dibuka.
+  // Jadi jangan mencoba mengubah progress/status
+  // kalau elemennya memang belum ada.
+
+  if (!progress || !taskStatus) {
+    return;
+  }
+
+
+  progress.textContent =
+    `${completed} / ${total} completed`;
+
+
+  if (completed === total) {
+
+    taskStatus.textContent = "Completed";
+
+    taskStatus.classList.add("completed");
+
+  } else {
+
+    taskStatus.textContent = "Not completed";
+
+    taskStatus.classList.remove("completed");
+
+  }
+
+}
+
+
+checkboxes.forEach(function (checkbox) {
+
+  checkbox.addEventListener(
+    "change",
+    updateProgress
+  );
+
+});
+
+
+updateProgress();
 
 
 
