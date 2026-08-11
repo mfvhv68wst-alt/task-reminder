@@ -1121,7 +1121,29 @@ function loadReminders() {
 
 }
 
+// =========================
+// OPEN NEW REMINDER FORM
+// =========================
 
+const addButton =
+  document.querySelector(".add-button");
+
+const addForm =
+  document.querySelector(".add-form");
+
+
+if (addButton && addForm) {
+
+  addButton.addEventListener(
+    "click",
+    function () {
+
+      addForm.style.display = "block";
+
+    }
+  );
+
+}
 loadReminders();
 </script>
 
