@@ -295,19 +295,22 @@ h1 {
 
 <body>
 
-  <header class="app-header">
+ <header class="app-header">
 
-    <div>
-      <p class="greeting">Good morning!</p>
+  <div>
+    <p class="greeting">Good morning!</p>
 
-      <h1>Reminders</h1>
+    <h1>Reminders</h1>
 
-      <p class="date">Monday, August 10</p>
-    </div>
+    <p class="date">Monday, August 10</p>
+  </div>
 
-    <button class="add-button" aria-label="Add reminder">
-      +
-    </button>
+  <button class="add-button" aria-label="Add reminder">
+    +
+  </button>
+
+</header>
+
 
 <div class="add-form">
 
@@ -315,17 +318,27 @@ h1 {
 
   <label>
     Title
-    <input type="text" id="reminder-title" placeholder="What do you need to do?">
+    <input
+      type="text"
+      id="reminder-title"
+      placeholder="What do you need to do?"
+    >
   </label>
 
   <label>
     Date
-    <input type="date" id="reminder-date">
+    <input
+      type="date"
+      id="reminder-date"
+    >
   </label>
 
   <label>
     Time
-    <input type="time" id="reminder-time">
+    <input
+      type="time"
+      id="reminder-time"
+    >
   </label>
 
   <label>
@@ -348,20 +361,20 @@ h1 {
 
   <div class="subtask-form">
 
-  <div class="subtask-form-header">
-    <span>Subtasks</span>
+    <div class="subtask-form-header">
+      <span>Subtasks</span>
 
-    <button
-      type="button"
-      id="add-subtask"
-    >
-      + Add
-    </button>
+      <button
+        type="button"
+        id="add-subtask"
+      >
+        + Add
+      </button>
+    </div>
+
+    <div id="subtask-inputs"></div>
+
   </div>
-
-  <div id="subtask-inputs"></div>
-
-</div>
 
   <button id="save-reminder">
     Save Reminder
@@ -369,7 +382,8 @@ h1 {
 
 </div>
 
-  </header>
+
+<main class="reminder-list">
 
 
   <main class="reminder-list">
