@@ -844,65 +844,112 @@ addSubtaskButton.addEventListener(
 document.addEventListener("change", function (event) {
 
   if (
-    event.target.matches(
+    !event.target.matches(
       ".reminder-card .subtasks input[type='checkbox']"
     )
   ) {
+    return;
+  }
 
-    const card =
-      event.target.closest(".reminder-card");
 
-    const checkboxes =
-      card.querySelectorAll(
-        ".subtasks input[type='checkbox']"
-      );
+  const card =
+    event.target.closest(".reminder-card");
 
-    const progress =
-      card.querySelector(".progress");
 
-    const taskStatus =
-      card.querySelector(".task-status");
+  if (!card) {
+    return;
+  }
 
-    let completed = 0;
 
-    checkboxes.forEach(function (checkbox) {
+  const checkboxes =
+    card.querySelectorAll(
+      ".subtasks input[type='checkbox']"
+    );
 
-      if (checkbox.checked) {
-        completed++;
-      }
+
+  const progress =
+    card.querySelector(".progress");
+
+
+  const taskStatus =
+    card.querySelector(".task-status");
+
+
+  let completed = 0;
+
+
+  checkboxes.forEach(function (checkbox) {
+
+    if (checkbox.checked) {
+      completed++;
+    }
+
+  });
+
+
+  const total =
+    checkboxes.length;
+
+
+  // Update progress
+
+  progress.textContent =
+    `${completed} / ${total} completed`;
+
+
+  // Update status
+
+  if (
+    completed === total &&
+    total > 0
+  ) {
+
+    taskStatus.textContent =
+      "Completed";
+
+    taskStatus.classList.add(
+      "completed"
+    );
+
+  } else {
+
+    taskStatus.textContent =
+      "Not completed";
+
+    taskStatus.classList.remove(
+      "completed"
+    );
+
+  }
+
+
+  // =========================
+  // SAVE STATUS
+  // =========================
+
+  const reminders =
+    getReminders();
+
+
+  const reminderId =
+    Number(card.dataset.reminderId);
+
+
+  const reminder =
+    reminders.find(function (item) {
+
+      return item.id === reminderId;
 
     });
 
-    const total = checkboxes.length;
 
-    progress.textContent =
-      `${completed} / ${total} completed`;
+  if (!reminder) {
+    return;
+  }
 
-    if (completed === total && total > 0) {
-
-      taskStatus.textContent = "Completed";
-
-      taskStatus.classList.add("completed");
-
-    } else {
-
-      taskStatus.textContent = "Not completed";
-
-      taskStatus.classList.remove("completed");
-
-    }
-const reminders = getReminders();
-
-const reminderId =
-  Number(card.dataset.reminderId);
-
-const reminder = reminders.find(function (item) {
-  return item.id === reminderId;
-});
-
-if (reminder) {
 
   reminder.subtaskCompleted = [];
+
 
   checkboxes.forEach(function (checkbox) {
 
@@ -912,16 +959,54 @@ if (reminder) {
 
   });
 
+
   reminder.completed =
-    completed === total && total > 0;
+    completed === total &&
+    total > 0;
+
 
   saveReminders(reminders);
-}
+
+
+  // =========================
+  // MOVE CARD
+  // =========================
+
+  if (reminder.completed) {
+
+    const completedList =
+      document.getElementById(
+        "completed-list"
+      );
+
+
+    if (completedList) {
+
+      completedList.appendChild(
+        card
+      );
+
+    }
+
+  } else {
+
+    const originalSection =
+      document.querySelector(
+        `.priority-section.${reminder.priority}`
+      );
+
+
+    if (originalSection) {
+
+      originalSection.appendChild(
+        card
+      );
+
+    }
+
   }
 
-});
-
-function loadReminders() {
+});function loadReminders() {
 
   const reminders = getReminders();
 
