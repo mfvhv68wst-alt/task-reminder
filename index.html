@@ -1016,10 +1016,6 @@ function loadReminders() {
 
 
     // =========================
-    // TASK WITHOUT SUBTASK
-    // =========================
-
-    // =========================
 // TASK WITHOUT SUBTASK
 // =========================
 
@@ -1031,21 +1027,18 @@ if (totalSubtasks === 0) {
   doneButton.className =
     "done-button";
 
-
   const taskStatus =
     newCard.querySelector(".task-status");
 
 
-  function updateDoneButton() {
+  function updateTaskDisplay() {
 
     if (reminder.completed) {
 
       taskStatus.textContent =
         "Completed";
 
-      taskStatus.classList.add(
-        "completed"
-      );
+      taskStatus.classList.add("completed");
 
       doneButton.textContent =
         "↶ Undo";
@@ -1055,9 +1048,7 @@ if (totalSubtasks === 0) {
       taskStatus.textContent =
         "Not completed";
 
-      taskStatus.classList.remove(
-        "completed"
-      );
+      taskStatus.classList.remove("completed");
 
       doneButton.textContent =
         "✓ Done";
@@ -1067,7 +1058,7 @@ if (totalSubtasks === 0) {
   }
 
 
-  updateDoneButton();
+  updateTaskDisplay();
 
 
   doneButton.addEventListener(
@@ -1090,17 +1081,18 @@ if (totalSubtasks === 0) {
       }
 
 
+      // Toggle Completed
       currentReminder.completed =
         !currentReminder.completed;
 
 
+      // Simpan ke Local Storage
       saveReminders(reminders);
 
 
-      /*
-       * Kalau sudah Completed:
-       * pindahkan card ke Completed.
-       */
+      // =========================
+      // PINDAH KE COMPLETED
+      // =========================
 
       if (currentReminder.completed) {
 
@@ -1120,10 +1112,9 @@ if (totalSubtasks === 0) {
       }
 
 
-      /*
-       * Kalau Undo:
-       * kembalikan card ke priority asal.
-       */
+      // =========================
+      // KEMBALI KE PRIORITY
+      // =========================
 
       else {
 
@@ -1143,7 +1134,7 @@ if (totalSubtasks === 0) {
       }
 
 
-      updateDoneButton();
+      updateTaskDisplay();
 
     }
   );
