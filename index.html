@@ -621,26 +621,26 @@ newCard.innerHTML = `
 `;
 if (subtaskList.length === 0) {
 
-  const doneButton = document.createElement("button");
+  const doneButton =
+    document.createElement("button");
 
   doneButton.className = "done-button";
-
-  doneButton.textContent = "✓ Done";
 
   const taskStatus =
     newCard.querySelector(".task-status");
 
-  doneButton.addEventListener("click", function () {
 
-    taskStatus.textContent = "Completed";
+  function updateTaskDisplay(completed) {
 
-    taskStatus.classList.add("completed");
+    if (completed) {
 
-    doneButton.textContent = "↶ Undo";
+      taskStatus.textContent = "Completed";
 
-    doneButton.classList.add("undo");
+      taskStatus.classList.add("completed");
 
-    doneButton.onclick = function () {
+      doneButton.textContent = "↶ Undo";
+
+    } else {
 
       taskStatus.textContent = "Not completed";
 
@@ -648,15 +648,76 @@ if (subtaskList.length === 0) {
 
       doneButton.textContent = "✓ Done";
 
-      doneButton.classList.remove("undo");
+    }
 
-    };
+  }
 
-  });
+
+  updateTaskDisplay(false);
+
+
+  doneButton.addEventListener(
+    "click",
+    function () {
+
+      const reminders = getReminders();
+
+      const currentReminder =
+        reminders.find(function (item) {
+
+          return item.id === reminderId;
+
+        });
+
+
+      if (!currentReminder) {
+        return;
+      }
+
+
+      currentReminder.completed =
+        !currentReminder.completed;
+
+
+      saveReminders(reminders);
+
+
+      updateTaskDisplay(
+        currentReminder.completed
+      );
+
+
+      if (currentReminder.completed) {
+
+        const completedList =
+          document.getElementById(
+            "completed-list"
+          );
+
+        if (completedList) {
+
+          completedList.appendChild(
+            newCard
+          );
+
+        }
+
+      } else {
+
+        section.appendChild(
+          newCard
+        );
+
+      }
+
+    }
+  );
+
 
   newCard
     .querySelector(".task-action")
     .appendChild(doneButton);
+
 }
 
       // Masukkan kartu ke priority section
