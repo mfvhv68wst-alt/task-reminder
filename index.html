@@ -1019,106 +1019,141 @@ function loadReminders() {
     // TASK WITHOUT SUBTASK
     // =========================
 
-    if (totalSubtasks === 0) {
+    // =========================
+// TASK WITHOUT SUBTASK
+// =========================
 
-      const doneButton =
-        document.createElement("button");
+if (totalSubtasks === 0) {
 
-      doneButton.className =
-        "done-button";
+  const doneButton =
+    document.createElement("button");
 
-
-      if (reminder.completed) {
-
-        doneButton.textContent =
-          "↶ Undo";
-
-      } else {
-
-        doneButton.textContent =
-          "✓ Done";
-
-      }
+  doneButton.className =
+    "done-button";
 
 
-      const taskStatus =
-        newCard.querySelector(".task-status");
+  const taskStatus =
+    newCard.querySelector(".task-status");
 
 
-      if (reminder.completed) {
+  function updateDoneButton() {
 
-        taskStatus.textContent =
-          "Completed";
+    if (reminder.completed) {
 
-        taskStatus.classList.add(
-          "completed"
-        );
+      taskStatus.textContent =
+        "Completed";
 
-      }
-
-
-      doneButton.addEventListener(
-        "click",
-        function () {
-
-          const reminders =
-            getReminders();
-
-          const currentReminder =
-            reminders.find(function (item) {
-
-              return item.id === reminder.id;
-
-            });
-
-
-          if (!currentReminder) {
-            return;
-          }
-
-
-          currentReminder.completed =
-            !currentReminder.completed;
-
-
-          saveReminders(reminders);
-
-
-          if (currentReminder.completed) {
-
-            taskStatus.textContent =
-              "Completed";
-
-            taskStatus.classList.add(
-              "completed"
-            );
-
-            doneButton.textContent =
-              "↶ Undo";
-
-          } else {
-
-            taskStatus.textContent =
-              "Not completed";
-
-            taskStatus.classList.remove(
-              "completed"
-            );
-
-            doneButton.textContent =
-              "✓ Done";
-
-          }
-
-        }
+      taskStatus.classList.add(
+        "completed"
       );
 
+      doneButton.textContent =
+        "↶ Undo";
 
-      newCard
-        .querySelector(".task-action")
-        .appendChild(doneButton);
+    } else {
+
+      taskStatus.textContent =
+        "Not completed";
+
+      taskStatus.classList.remove(
+        "completed"
+      );
+
+      doneButton.textContent =
+        "✓ Done";
 
     }
+
+  }
+
+
+  updateDoneButton();
+
+
+  doneButton.addEventListener(
+    "click",
+    function () {
+
+      const reminders =
+        getReminders();
+
+      const currentReminder =
+        reminders.find(function (item) {
+
+          return item.id === reminder.id;
+
+        });
+
+
+      if (!currentReminder) {
+        return;
+      }
+
+
+      currentReminder.completed =
+        !currentReminder.completed;
+
+
+      saveReminders(reminders);
+
+
+      /*
+       * Kalau sudah Completed:
+       * pindahkan card ke Completed.
+       */
+
+      if (currentReminder.completed) {
+
+        const completedList =
+          document.getElementById(
+            "completed-list"
+          );
+
+        if (completedList) {
+
+          completedList.appendChild(
+            newCard
+          );
+
+        }
+
+      }
+
+
+      /*
+       * Kalau Undo:
+       * kembalikan card ke priority asal.
+       */
+
+      else {
+
+        const originalSection =
+          document.querySelector(
+            `.priority-section.${currentReminder.priority}`
+          );
+
+        if (originalSection) {
+
+          originalSection.appendChild(
+            newCard
+          );
+
+        }
+
+      }
+
+
+      updateDoneButton();
+
+    }
+  );
+
+
+  newCard
+    .querySelector(".task-action")
+    .appendChild(doneButton);
+
+}
 
 
     // =========================
