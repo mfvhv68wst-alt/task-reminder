@@ -138,14 +138,38 @@ h1 {
   font-size: 12px;
 }
 .task-status {
+  display: inline-block;
   margin-top: 8px;
-  font-size: 13px;
+  font-size: 12px;
   color: #888888;
+  vertical-align: middle;
 }
 
 .task-status.completed {
   color: #7ee787;
   font-weight: bold;
+}
+
+.task-action {
+  display: inline-block;
+  margin-top: 8px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.done-button {
+  padding: 5px 10px;
+  border: 1px solid #444444;
+  border-radius: 8px;
+  background: transparent;
+  color: #aaaaaa;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.done-button:hover {
+  background: #ffffff;
+  color: #111111;
 }
 
 .add-form {
